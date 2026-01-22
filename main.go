@@ -16,7 +16,7 @@ import (
 type Mistake struct {
 	ID              int64
 	Topic           string
-	Date            string // YYYY-MM-DD
+	Date            string
 	Problem         string
 	Missed          string
 	FixRule         string
@@ -116,7 +116,6 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	from := strings.TrimSpace(r.URL.Query().Get("from"))
 	to := strings.TrimSpace(r.URL.Query().Get("to"))
 
-	// validate dates if present
 	if from != "" {
 		if _, err := time.Parse("2006-01-02", from); err != nil {
 			http.Error(w, "Invalid 'from' date. Use YYYY-MM-DD.", http.StatusBadRequest)
@@ -264,7 +263,6 @@ func handleExportCSV(w http.ResponseWriter, r *http.Request) {
 	from := strings.TrimSpace(r.URL.Query().Get("from"))
 	to := strings.TrimSpace(r.URL.Query().Get("to"))
 
-	// validate dates if present
 	if from != "" {
 		if _, err := time.Parse("2006-01-02", from); err != nil {
 			http.Error(w, "Invalid 'from' date. Use YYYY-MM-DD.", http.StatusBadRequest)
@@ -351,7 +349,7 @@ func handleRules(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-/* -------------------- DB ops -------------------- */
+// DB OEPRATIONS
 
 func searchMistakes(db *sql.DB, q, topic, from, to string, limit int) ([]Mistake, error) {
 	var where []string
@@ -434,8 +432,7 @@ func deleteMistake(db *sql.DB, id int64) error {
 	return err
 }
 
-/* -------------------- helpers -------------------- */
-
+// HELPER FUNCTIONS
 func mistakeFromForm(r *http.Request) (Mistake, error) {
 	topic := strings.TrimSpace(r.FormValue("topic"))
 	date := strings.TrimSpace(r.FormValue("date"))
@@ -467,7 +464,6 @@ func (e errText) Error() string { return string(e) }
 func parseIDParam(r *http.Request, key string) (int64, bool) {
 	raw := r.URL.Query().Get(key)
 	if raw == "" {
-		// allow POST form id too
 		raw = r.FormValue(key)
 	}
 	id, err := strconv.ParseInt(raw, 10, 64)
@@ -478,7 +474,6 @@ func parseIDParam(r *http.Request, key string) (int64, bool) {
 }
 
 func redirectBack(w http.ResponseWriter, r *http.Request) {
-	// send user back to their current filtered list
 	back := r.Referer()
 	if back == "" {
 		back = "/"
