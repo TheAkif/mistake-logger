@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mistake Log</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <h1>Mistake Log</h1>
+      <p>Quickly log mistakes + the rule/pattern to not repeat them.</p>
+    </header>
+
+    <section class="card">
+      <h2>Add a mistake</h2>
+
+      <form method="POST" action="/add" class="grid">
+        <label>
+          <span>Topic</span>
+          <input name="topic" placeholder="e.g., DP, SQL, Go, System Design" required />
+        </label>
+
+        <label>
+          <span>Date</span>
+          <input type="date" name="date" value="{{.Today}}" required />
+        </label>
+
+        <label class="full">
+          <span>Problem statement</span>
+          <textarea name="problem_statement" rows="2" placeholder="What was the question/problem?" required></textarea>
+        </label>
+
+        <label class="full">
+          <span>What I missed</span>
+          <textarea name="what_i_missed" rows="2" placeholder="What exactly did you miss?" required></textarea>
+        </label>
+
+        <label class="full">
+          <span>Fix rule</span>
+          <textarea name="fix_rule" rows="2" placeholder="The rule that fixes this next time" required></textarea>
+        </label>
+
+        <label class="full">
+          <span>Pattern to remember</span>
+          <textarea name="pattern_to_remember" rows="2" placeholder="Mnemonic / checklist / pattern" required></textarea>
+        </label>
+
+        <div class="actions full">
+          <button type="submit">Save</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="list-head">
+        <h2>Recent mistakes</h2>
+        <span class="muted">Showing up to 200</span>
+      </div>
+
+      {{if .Mistakes}}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Topic</th>
+              <th>Problem</th>
+              <th>Missed</th>
+              <th>Fix rule</th>
+              <th>Pattern</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{range .Mistakes}}
+            <tr>
+              <td class="nowrap">{{.Date}}</td>
+              <td class="nowrap"><strong>{{.Topic}}</strong></td>
+              <td>{{.Problem}}</td>
+              <td>{{.Missed}}</td>
+              <td>{{.FixRule}}</td>
+              <td>{{.PatternRemember}}</td>
+            </tr>
+            {{end}}
+          </tbody>
+        </table>
+      </div>
+      {{else}}
+        <p class="muted">No mistakes logged yet. Add your first one above.</p>
+      {{end}}
+    </section>
+
+    <footer class="footer muted">
+      Data is stored locally in <code>mistakes.db</code>.
+    </footer>
+  </div>
+</body>
+</html>
