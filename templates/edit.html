@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Edit Mistake</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <div class="header-row">
+        <div>
+          <h1>Edit Mistake</h1>
+          <p class="muted small">ID: {{.Mistake.ID}}</p>
+        </div>
+        <div class="header-actions">
+          <a class="btn secondary" href="/">Back</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="card">
+      <form method="POST" action="/edit?id={{.Mistake.ID}}" class="grid">
+        <label>
+          <span>Topic</span>
+          <input name="topic" value="{{.Mistake.Topic}}" required />
+        </label>
+
+        <label>
+          <span>Date</span>
+          <input type="date" name="date" value="{{.Mistake.Date}}" required />
+        </label>
+
+        <label class="full">
+          <span>Problem statement</span>
+          <textarea name="problem_statement" rows="2" required>{{.Mistake.Problem}}</textarea>
+        </label>
+
+        <label class="full">
+          <span>What I missed</span>
+          <textarea name="what_i_missed" rows="2" required>{{.Mistake.Missed}}</textarea>
+        </label>
+
+        <label class="full">
+          <span>Fix rule</span>
+          <textarea name="fix_rule" rows="2" required>{{.Mistake.FixRule}}</textarea>
+        </label>
+
+        <label class="full">
+          <span>Pattern to remember</span>
+          <textarea name="pattern_to_remember" rows="2" required>{{.Mistake.PatternRemember}}</textarea>
+        </label>
+
+        <div class="actions full">
+          <button class="btn" type="submit">Save changes</button>
+          <a class="btn secondary" href="/">Cancel</a>
+        </div>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

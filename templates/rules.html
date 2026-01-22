@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rule Cards</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <div class="header-row">
+        <div>
+          <h1>Rule Cards</h1>
+          <p class="muted">Revision mode: just Fix Rule + Pattern.</p>
+        </div>
+        <div class="header-actions">
+          <a class="btn secondary" href="/{{if or .QueryQ .Topic .From .To}}?q={{.QueryQ}}&topic={{.Topic}}&from={{.From}}&to={{.To}}{{end}}">Back to list</a>
+          <a class="btn secondary" href="/export.csv{{if or .QueryQ .Topic .From .To}}?q={{.QueryQ}}&topic={{.Topic}}&from={{.From}}&to={{.To}}{{end}}">Export CSV</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Filter</h2>
+      <form method="GET" action="/rules" class="grid filter">
+        <label>
+          <span>Search</span>
+          <input name="q" value="{{.QueryQ}}" placeholder="Search..." />
+        </label>
+
+        <label>
+          <span>Topic (exact)</span>
+          <input name="topic" value="{{.Topic}}" placeholder="e.g., SQL" />
+        </label>
+
+        <label>
+          <span>From</span>
+          <input type="date" name="from" value="{{.From}}" />
+        </label>
+
+        <label>
+          <span>To</span>
+          <input type="date" name="to" value="{{.To}}" />
+        </label>
+
+        <div class="actions full">
+          <button class="btn" type="submit">Apply</button>
+          <a class="btn secondary" href="/rules">Reset</a>
+        </div>
+      </form>
+      <p class="muted small">Showing <strong>{{.Count}}</strong> card(s).</p>
+    </section>
+
+    {{if .Items}}
+      <div class="cards">
+        {{range .Items}}
+          <article class="card rule-card">
+            <div class="rule-head">
+              <div class="pill">{{.Topic}}</div>
+              <div class="muted small">{{.Date}}</div>
+              <div class="rule-actions">
+                <a class="btn tiny secondary" href="/edit?id={{.ID}}">Edit</a>
+              </div>
+            </div>
+
+            <h3 class="rule-title">Fix rule</h3>
+            <p class="rule-body">{{.FixRule}}</p>
+
+            <h3 class="rule-title">Pattern to remember</h3>
+            <p class="rule-body">{{.PatternRemember}}</p>
+
+            <details class="details">
+              <summary>Show context</summary>
+              <div class="details-body">
+                <h4 class="muted small">Problem</h4>
+                <p>{{.Problem}}</p>
+                <h4 class="muted small">What I missed</h4>
+                <p>{{.Missed}}</p>
+              </div>
+            </details>
+          </article>
+        {{end}}
+      </div>
+    {{else}}
+      <section class="card">
+        <p class="muted">No items found.</p>
+      </section>
+    {{end}}
+  </div>
+</body>
+</html>

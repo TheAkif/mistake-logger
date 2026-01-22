@@ -9,9 +9,48 @@
 <body>
   <div class="wrap">
     <header class="header">
-      <h1>Mistake Log</h1>
-      <p>Quickly log mistakes + the rule/pattern to not repeat them.</p>
+      <div class="header-row">
+        <div>
+          <h1>Mistake Log</h1>
+          <p>Log mistakes + the rule/pattern to not repeat them.</p>
+        </div>
+        <div class="header-actions">
+          <a class="btn secondary" href="/rules{{if or .QueryQ .Topic .From .To}}?q={{.QueryQ}}&topic={{.Topic}}&from={{.From}}&to={{.To}}{{end}}">Rule Cards</a>
+          <a class="btn secondary" href="/export.csv{{if or .QueryQ .Topic .From .To}}?q={{.QueryQ}}&topic={{.Topic}}&from={{.From}}&to={{.To}}{{end}}">Export CSV</a>
+        </div>
+      </div>
     </header>
+
+    <section class="card">
+      <h2>Search / Filter</h2>
+      <form method="GET" action="/" class="grid filter">
+        <label>
+          <span>Search</span>
+          <input name="q" value="{{.QueryQ}}" placeholder="Search text in any field..." />
+        </label>
+
+        <label>
+          <span>Topic (exact)</span>
+          <input name="topic" value="{{.Topic}}" placeholder="e.g., DP" />
+        </label>
+
+        <label>
+          <span>From</span>
+          <input type="date" name="from" value="{{.From}}" />
+        </label>
+
+        <label>
+          <span>To</span>
+          <input type="date" name="to" value="{{.To}}" />
+        </label>
+
+        <div class="actions full">
+          <button class="btn" type="submit">Apply</button>
+          <a class="btn secondary" href="/">Reset</a>
+        </div>
+      </form>
+      <p class="muted small">Showing <strong>{{.Count}}</strong> result(s).</p>
+    </section>
 
     <section class="card">
       <h2>Add a mistake</h2>
@@ -48,7 +87,7 @@
         </label>
 
         <div class="actions full">
-          <button type="submit">Save</button>
+          <button class="btn" type="submit">Save</button>
         </div>
       </form>
     </section>
@@ -56,7 +95,7 @@
     <section class="card">
       <div class="list-head">
         <h2>Recent mistakes</h2>
-        <span class="muted">Showing up to 200</span>
+        <span class="muted small">Up to 200 shown</span>
       </div>
 
       {{if .Mistakes}}
@@ -70,6 +109,7 @@
               <th>Missed</th>
               <th>Fix rule</th>
               <th>Pattern</th>
+              <th class="nowrap">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -81,6 +121,13 @@
               <td>{{.Missed}}</td>
               <td>{{.FixRule}}</td>
               <td>{{.PatternRemember}}</td>
+              <td class="nowrap">
+                <a class="btn tiny secondary" href="/edit?id={{.ID}}">Edit</a>
+                <form method="POST" action="/delete?id={{.ID}}" class="inline"
+                      onsubmit="return confirm('Delete this mistake?');">
+                  <button class="btn tiny danger" type="submit">Delete</button>
+                </form>
+              </td>
             </tr>
             {{end}}
           </tbody>
